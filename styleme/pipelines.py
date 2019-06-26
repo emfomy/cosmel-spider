@@ -69,10 +69,10 @@ class StylemePipeline:
             )
         elif isinstance(item, ArticleMetaItem):
             self.db.execute(
-                'INSERT INTO article.meta (id, author, is_styleme) VALUES (%s, %s, %s) ' \
-                'ON CONFLICT(id) DO NOTHING',
-                # 'ON CONFLICT(id) DO UPDATE SET author=EXCLUDED.author, is_styleme=EXCLUDED.is_styleme',
-                (item['id'], item['author'], item['is_styleme'])
+                'INSERT INTO article.meta (id, author, is_styleme, link) VALUES (%s, %s, %s, %s) ' \
+                # 'ON CONFLICT(id) DO NOTHING',
+                'ON CONFLICT(id) DO UPDATE SET author=EXCLUDED.author, is_styleme=EXCLUDED.is_styleme, link=EXCLUDED.link',
+                (item['id'], item['author'], item['is_styleme'], item['link'])
             )
         elif isinstance(item, ArticleBodyItem):
             self.db.execute(

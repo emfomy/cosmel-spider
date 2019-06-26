@@ -23,13 +23,17 @@ class ProductMetaItem(scrapy.Item):
 
 class ProductArticleItem(scrapy.Item):
     id = scrapy.Field()
-    article = scrapy.Field()
+    article_id = scrapy.Field()
     type = scrapy.Field()
 
 class ArticleMetaItem(scrapy.Item):
     id = scrapy.Field()
     author = scrapy.Field()
     is_styleme = scrapy.Field()
+    link = scrapy.Field()
+
+    def __repr__(self):
+        return repr({ k: v for k, v in self.items() if k != 'link' })
 
 class ArticleBodyItem(scrapy.Item):
     id = scrapy.Field()

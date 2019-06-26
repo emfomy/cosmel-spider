@@ -1,5 +1,46 @@
-# cosmel-spider
-CosmEL Spider
+# CosmEL Spider
+
+## Spiders
+
+### brand
+- in:  `https://styleme.pixnet.net/api/searchbrands/`
+- out: `brand.meta`
+
+### product
+- in:  `brand.meta`
+- in:  `https://styleme.pixnet.net/api/searchbrands/{brand_id}/products/`
+- out: `product.meta`
+
+### article
+- in:  `product.meta`
+- in:  `https://styleme.pixnet.net/api/products/{product_id}/articles`
+- out: `article.meta`
+- out: `product.article`
+
+### article
+- in:  `product.meta`
+- in:  `https://styleme.pixnet.net/api/products/{product_id}/articles`
+- out: `article.meta`
+- out: `product.article`
+
+### article_styleme
+- in:  `article.meta`
+- in:  `https://styleme.pixnet.net/api/articles/{article_id}`
+- out: `article.info`
+- out: `article.body`
+
+### article_pixnet
+- in:  `article.meta`
+- in:  `https://emma.pixnet.cc/blog/articles/{article_id}`
+- out: `article.info`
+- out: `article.body`
+
+### article_pixnet_post
+- in:  `article.meta.link`
+- out: `article.info`
+- out: `article.body`
+
+## Links
 
 https://developer.pixnet.pro
 

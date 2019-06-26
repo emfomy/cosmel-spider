@@ -43,6 +43,7 @@ class Spider(scrapy.Spider):
                 id         = aid,
                 author     = a['user']['user_name'],
                 is_styleme = bool(a['is_styleme']),
+                link       = a['link'],
             )
             yield ProductArticleItem(
                 id         = pid,
