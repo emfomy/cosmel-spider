@@ -11,11 +11,10 @@
 - in:  `https://styleme.pixnet.net/api/searchbrands/{brand_id}/products/`
 - out: `product.meta`
 
-### article
+### product_info
 - in:  `product.meta`
-- in:  `https://styleme.pixnet.net/api/products/{product_id}/articles`
-- out: `article.meta`
-- out: `product.article`
+- in:  `https://styleme.pixnet.net/api/products/{product_id}`
+- out: `product.info`
 
 ### article
 - in:  `product.meta`

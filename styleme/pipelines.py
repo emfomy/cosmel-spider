@@ -47,46 +47,10 @@ class StylemePipeline:
     def process_item(self, item, spider):
         # logger().verbose(item)
 
-        if isinstance(item, BrandMetaItem):
-            self.db.execute(
-                'INSERT INTO brand.meta (id, name) VALUES (%s, %s) ' \
-                'ON CONFLICT(id) DO NOTHING',
-                # 'ON CONFLICT(id) DO UPDATE SET name=EXCLUDED.name',
-                (item['id'], item['name'])
-            )
-        elif isinstance(item, ProductMetaItem):
-            self.db.execute(
-                'INSERT INTO product.meta (id, name, brand_id) VALUES (%s, %s, %s) ' \
-                'ON CONFLICT(id) DO NOTHING',
-                # 'ON CONFLICT(id) DO UPDATE SET name=EXCLUDED.name, brand_id=EXCLUDED.brand_id',
-                (item['id'], item['name'], item['brand_id'])
-            )
-        elif isinstance(item, ProductArticleItem):
-            self.db.execute(
-                'INSERT INTO product.article (id, article_id, type) VALUES (%s, %s, %s) ' \
-                'ON CONFLICT(id, article_id) DO NOTHING',
-                (item['id'], item['article_id'], item['type'])
-            )
-        elif isinstance(item, ArticleMetaItem):
-            self.db.execute(
-                'INSERT INTO article.meta (id, author, is_styleme, link) VALUES (%s, %s, %s, %s) ' \
-                # 'ON CONFLICT(id) DO NOTHING',
-                'ON CONFLICT(id) DO UPDATE SET author=EXCLUDED.author, is_styleme=EXCLUDED.is_styleme, link=EXCLUDED.link',
-                (item['id'], item['author'], item['is_styleme'], item['link'])
-            )
-        elif isinstance(item, ArticleBodyItem):
-            self.db.execute(
-                'INSERT INTO article.info (id, title, category_id, subcategory_id) VALUES (%s, %s, %s, %s) ' \
-                'ON CONFLICT(id) DO NOTHING',
-                (item['id'], item['title'], item['category_id'], item['subcategory_id'])
-            )
-            self.db.execute(
-                'INSERT INTO article.body (id, body) VALUES (%s, %s) ' \
-                'ON CONFLICT(id) DO NOTHING',
-                (item['id'], item['body'])
-            )
-        else:
-            logger().warning(f'Unknown item {item.__class__}')
+        try:
+            item.submit(self.db)
+        except Exception as e:
+            logger().error(exceptstr(e))
 
         self.count += 1
         if self.count >= 1000:

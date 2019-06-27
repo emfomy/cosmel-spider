@@ -21,14 +21,17 @@ class Spider(scrapy.Spider):
         db.execute('SELECT id, author FROM article.meta WHERE is_styleme=False')
         res = db.fetchall()
 
+        skip_sets = []
+
         db.execute('SELECT id FROM article.info')
-        info_id = set(v[0] for v in db.fetchall())
+        skip_sets.append(set(v[0] for v in db.fetchall()))
 
         db.execute('SELECT id FROM article.body')
-        body_id = set(v[0] for v in db.fetchall())
+        skip_sets.append(set(v[0] for v in db.fetchall()))
+
+        res = [line for line in res if line[0] not in set.intersection(*skip_sets)]
         del db
 
-        res = [line for line in res if line[0] not in info_id or line[0] not in body_id]
         total = len(res)
         logger().notice(f'Total {total} articles')
 

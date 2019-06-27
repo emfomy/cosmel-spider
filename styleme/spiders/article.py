@@ -27,7 +27,7 @@ class Spider(scrapy.Spider):
             yield from self.do_product_article(pid=pid, type='teaching')
 
     def do_product_article(self, *, pid, type, page=1):
-        url = f'https://styleme.pixnet.net/api/products/{pid}/articles?type={type}/'
+        url = f'https://styleme.pixnet.net/api/products/{pid}/articles?type={type}&page={page}'
         yield scrapy.Request(
             url,
             callback=partial(self.parse_product_article, pid=pid, type=type, page=page),
@@ -38,9 +38,8 @@ class Spider(scrapy.Spider):
         data = json.loads(res.body)
         assert not data['error']
         for a in data['articles']:
-            aid = a['id']
             yield ArticleMetaItem(
-                id         = aid,
+                id         = a['id'],
                 author     = a['user']['user_name'],
                 is_styleme = bool(a['is_styleme']),
                 link       = a['link'],
