@@ -7,6 +7,7 @@ import scrapy
 from utils.logging import logger
 
 from ..db import Db
+from ..util import retry
 from ..items import *
 
 class Spider(scrapy.Spider):
@@ -14,23 +15,25 @@ class Spider(scrapy.Spider):
     allowed_domains = ['styleme.pixnet.net']
 
     def start_requests(self):
-        db = Db(self)
-        db.execute('SELECT id, name FROM product.meta ORDER BY id')
-        res = db.fetchall()
+        # db = Db(self)
+        # db.execute('SELECT id, name FROM product.meta ORDER BY id')
+        # res = db.fetchall()
 
-        skip_sets = []
+        # skip_sets = []
 
-        db.execute('SELECT id FROM product.info')
-        skip_sets.append(set(v[0] for v in db.fetchall()))
+        # db.execute('SELECT id FROM product.info')
+        # skip_sets.append(set(v[0] for v in db.fetchall()))
 
-        db.execute('SELECT id FROM product.spec')
-        skip_sets.append(set(v[0] for v in db.fetchall()))
+        # db.execute('SELECT id FROM product.spec')
+        # skip_sets.append(set(v[0] for v in db.fetchall()))
 
-        db.execute('SELECT id FROM product.quality')
-        skip_sets.append(set(v[0] for v in db.fetchall()))
+        # db.execute('SELECT id FROM product.quality')
+        # skip_sets.append(set(v[0] for v in db.fetchall()))
 
-        res = [line for line in res if line[0] not in set.intersection(*skip_sets)]
-        del db
+        # res = [line for line in res if line[0] not in set.intersection(*skip_sets)]
+        # del db
+
+        res = [(15169, '養潤緊緻彈力多效面膜')]
 
         total = len(res)
         logger().notice(f'Total {total} products')
@@ -52,7 +55,7 @@ class Spider(scrapy.Spider):
     def parse_product_info(self, res, *, pid, page):
         data = json.loads(res.body)
         if data['error']:
-            logger().warning('ERROR!')
+            yield from retry(res)
             return []
 
         p = data['product']
