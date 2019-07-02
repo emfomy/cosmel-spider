@@ -2,7 +2,7 @@
 
 import os
 
-import psycopg2
+import pymysql
 import scrapy
 
 from utils.logging import *
@@ -13,28 +13,29 @@ class Db:
         config = spider.settings.get('CONFIG')
         logger().success(f'Connecting Database ... {config["db_host"]} :: {config["db_name"]}')
 
-        self.pgdb = psycopg2.connect(
+        self.mydb = pymysql.connect(
             host=config['db_host'],
-            dbname=config['db_name'],
+            database=config['db_name'],
             user=config['db_user'],
             password=config['db_password'],
         )
 
-        self.pgcur = self.pgdb.cursor()
+        self.mycur = self.mydb.cursor()
 
     def __del__(self):
         logger().success('Closing Database ...')
         try:
-            self.pgcur.close()
-            self.pgdb.close()
+            self.mycur.close()
+            self.mydb.close()
         except Exception as e:
             logger().error(exceptstr(e))
 
     def execute(self, *args, **kwargs):
-        return self.pgcur.execute(*args, **kwargs)
+        return self.mycur.execute(*args, **kwargs)
 
     def fetchall(self, *args, **kwargs):
-        return self.pgcur.fetchall(*args, **kwargs)
+        return self.mycur.fetchall(*args, **kwargs)
 
     def commit(self, *args, **kwargs):
-        return self.pgdb.commit(*args, **kwargs)
+        logger().success('Committing Database ...')
+        return self.mydb.commit(*args, **kwargs)

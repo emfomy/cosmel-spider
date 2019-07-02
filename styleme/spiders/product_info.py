@@ -4,7 +4,7 @@ from functools import partial
 
 import scrapy
 
-from utils.logging import logger
+from utils.logging import *
 
 from ..db import Db
 from ..util import retry
@@ -15,25 +15,21 @@ class Spider(scrapy.Spider):
     allowed_domains = ['styleme.pixnet.net']
 
     def start_requests(self):
-        # db = Db(self)
-        # db.execute('SELECT id, name FROM product.meta ORDER BY id')
-        # res = db.fetchall()
+        db = Db(self)
+        db.execute('SELECT id, name FROM product ORDER BY id')
+        res = db.fetchall()
 
-        # skip_sets = []
+        db.execute('SELECT id FROM product_info')
+        info_id = set(v[0] for v in db.fetchall())
 
-        # db.execute('SELECT id FROM product.info')
-        # skip_sets.append(set(v[0] for v in db.fetchall()))
+        db.execute('SELECT id FROM product_spec')
+        spec_id = set(v[0] for v in db.fetchall())
 
-        # db.execute('SELECT id FROM product.spec')
-        # skip_sets.append(set(v[0] for v in db.fetchall()))
+        db.execute('SELECT id FROM product_quality')
+        quality_id = set(v[0] for v in db.fetchall())
 
-        # db.execute('SELECT id FROM product.quality')
-        # skip_sets.append(set(v[0] for v in db.fetchall()))
-
-        # res = [line for line in res if line[0] not in set.intersection(*skip_sets)]
-        # del db
-
-        res = [(15169, '養潤緊緻彈力多效面膜')]
+        res = [line for line in res if (line[0] not in info_id or line[0] not in spec_id or line[0] not in quality_id)]
+        del db
 
         total = len(res)
         logger().notice(f'Total {total} products')
@@ -56,12 +52,12 @@ class Spider(scrapy.Spider):
         data = json.loads(res.body)
         if data['error']:
             yield from retry(res)
-            return []
+            return
 
         p = data['product']
         yield ProductInfoItem(
             id   = p['id'],
-            desc = p['desc'],
+            description = p['desc'],
         )
 
         for quality in p['qualities']:

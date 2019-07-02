@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from utils.logging import logger
+from utils.logging import *
 
 # Database
 import json
@@ -11,6 +11,7 @@ with open('.config.json') as fin:
 # Settings
 LOG_ENABLED = False
 CLOSESPIDER_ERRORCOUNT = 1
+RETRY_TIMES = 0
 
 # Scrapy settings for styleme project
 #

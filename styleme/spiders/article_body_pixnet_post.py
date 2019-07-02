@@ -4,7 +4,7 @@ from functools import partial
 
 import scrapy
 
-from utils.logging import logger
+from utils.logging import *
 
 from ..db import Db
 from ..items import *
@@ -12,24 +12,22 @@ from ..items import *
 class Spider(scrapy.Spider):
     name = __name__.split('.')[-1]
     allowed_domains = ['pixnet.net']
-    handle_httpstatus_list = [406]
+    handle_httpstatus_list = [406, 500]
 
     def start_requests(self):
-        self.count_406 = 0
+        self.count_error = 0
 
         db = Db(self)
-        db.execute('SELECT id, author, link FROM article.meta WHERE is_styleme=False')
+        db.execute('SELECT id, author, link FROM article WHERE is_styleme=False')
         res = db.fetchall()
 
-        skip_sets = []
+        db.execute('SELECT id FROM article_info')
+        info_id = set(v[0] for v in db.fetchall())
 
-        db.execute('SELECT id FROM article.info')
-        skip_sets.append(set(v[0] for v in db.fetchall()))
+        db.execute('SELECT id FROM article_body')
+        body_id = set(v[0] for v in db.fetchall())
 
-        db.execute('SELECT id FROM article.body')
-        skip_sets.append(set(v[0] for v in db.fetchall()))
-
-        res = [line for line in res if line[0] not in set.intersection(*skip_sets)]
+        res = [line for line in res if (line[0] not in info_id or line[0] not in body_id)]
         del db
 
         total = len(res)
@@ -38,7 +36,7 @@ class Spider(scrapy.Spider):
         for i, (aid, author, link,) in enumerate(res):
             logger().notice('-'*(i*71//total+1))
             logger().info((aid, author,))
-            assert self.count_406 < 100
+            assert self.count_error < 100
             yield from self.do_article_body_pixnet(aid=aid, link=link)
 
     def do_article_body_pixnet(self, *, aid, link):
@@ -51,9 +49,9 @@ class Spider(scrapy.Spider):
         )
 
     def parse_product_body_pixnet(self, res, *, aid):
-        if res.status == 406:
-            self.count_406 += 1
-            logger().error(f'406 count {self.count_406}')
+        if res.status in self.handle_httpstatus_list:
+            self.count_error += 1
+            logger().error(f'Error count {self.count_error}')
             return
 
         title = res.xpath(f'//li[@id="article-{aid}"]/h2/a/node()').getall()

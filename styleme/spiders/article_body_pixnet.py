@@ -1,0 +1,81 @@
+# -*- coding: utf-8 -*-
+import json
+from functools import partial
+
+import scrapy
+
+from utils.logging import *
+
+from ..db import Db
+from ..items import *
+
+class Spider(scrapy.Spider):
+    name = __name__.split('.')[-1]
+    allowed_domains = ['styleme.pixnet.net']
+    handle_httpstatus_list = [403, 404]
+
+    def start_requests(self):
+        self.count_error = 0
+
+        db = Db(self)
+        db.execute('SELECT id, author FROM article WHERE is_styleme=False')
+        res = db.fetchall()
+
+        db.execute('SELECT id FROM article_info')
+        info_id = set(v[0] for v in db.fetchall())
+
+        db.execute('SELECT id FROM article_body')
+        body_id = set(v[0] for v in db.fetchall())
+
+        res = [line for line in res if (line[0] not in info_id or line[0] not in body_id)]
+        del db
+
+        total = len(res)
+        logger().notice(f'Total {total} articles')
+
+        for i, (aid, author,) in enumerate(res):
+            logger().notice('-'*(i*71//total+1))
+            logger().info((aid, author,))
+            assert self.count_error < 100
+            yield from self.do_article_body_pixnet(aid=aid, author=author)
+
+    def do_article_body_pixnet(self, *, aid, author):
+        url = f'https://emma.pixnet.cc/blog/articles/{aid}.json?user={author}&trim_user=1'
+        yield scrapy.Request(
+            url,
+            callback=partial(self.parse_article_body_pixnet, aid=aid),
+            meta={ 'dont_redirect': True },
+        )
+
+    def parse_article_body_pixnet(self, res, *, aid):
+        try:
+            data = json.loads(res.body.decode())
+            if data['error']:
+                ecode = int(data['code'])
+                emsg = data['message']
+                if ecode in [2101, 3900]:
+                    logger().warning(f'aid#{aid} | [{ecode}] {emsg}')
+                    a = {
+                        'title': None,
+                        'body': None,
+                    }
+                elif ecode == 1302:
+                    raise UserWarning(f'aid#{aid} | [{ecode}] {emsg}')
+                else:
+                    logger().warning(f'aid#{aid} | [{ecode}] {emsg}')
+                    raise UserWarning(f'aid#{aid} | [{ecode}] {emsg}')
+            else:
+                a = data['article']
+        except Exception as e:
+            logger().error(exceptstr(e))
+            self.count_error += 1
+            logger().error(f'Error count {self.count_error}')
+            return
+
+        yield ArticleBodyItem(
+            id             = aid,
+            title          = a['title'],
+            category_id    = None,
+            subcategory_id = None,
+            body           = a['body'],
+        )

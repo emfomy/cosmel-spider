@@ -2,42 +2,47 @@
 
 ## Spiders
 
-### brand
+### brand_meta
 - in:  `https://styleme.pixnet.net/api/searchbrands/`
-- out: `brand.meta`
+- out: `brand`
 
-### product
-- in:  `brand.meta`
+### product_meta
+- in:  `brand`
 - in:  `https://styleme.pixnet.net/api/searchbrands/{brand_id}/products/`
-- out: `product.meta`
+- out: `product`
 
 ### product_info
-- in:  `product.meta`
+- in:  `product`
 - in:  `https://styleme.pixnet.net/api/products/{product_id}`
-- out: `product.info`
+- out: `product_info`
 
-### article
-- in:  `product.meta`
+### article_meta_product
+- in:  `product`
 - in:  `https://styleme.pixnet.net/api/products/{product_id}/articles`
-- out: `article.meta`
-- out: `product.article`
+- out: `article`
+- out: `product_article`
 
-### article_styleme
-- in:  `article.meta`
+### article_meta_category
+- in:  `category_sub`
+- in:  `https://styleme.pixnet.net/api/articles/categorylist/{category_id}?subcategory_id={subcategory_id}`
+- out: `article`
+
+### article_body_styleme
+- in:  `article`
 - in:  `https://styleme.pixnet.net/api/articles/{article_id}`
-- out: `article.info`
-- out: `article.body`
+- out: `article_info`
+- out: `article_body`
 
-### article_pixnet
-- in:  `article.meta`
+### article_body_pixnet
+- in:  `article`
 - in:  `https://emma.pixnet.cc/blog/articles/{article_id}`
-- out: `article.info`
-- out: `article.body`
+- out: `article_info`
+- out: `article_body`
 
-### article_pixnet_post
-- in:  `article.meta.link`
-- out: `article.info`
-- out: `article.body`
+### article_body_pixnet_post
+- in:  `article.link`
+- out: `article_info`
+- out: `article_body`
 
 ## Links
 
@@ -51,6 +56,10 @@ https://styleme.pixnet.net/api/searchcategory/
 https://styleme.pixnet.net/api/search/category/?quality=###&usage_id=16&sort_by=price&sort=asc&page=1&per_page=20
 sort_by: article_count, price
 sort: desc, asc
+
+https://styleme.pixnet.net/api/search/category/?quality=卸妝產品&efficiencies=卸妝
+
+https://styleme.pixnet.net/api/articles/categorylist/1?subcategory_id=7&page=1&per_page=20&without_category_id=0
 
 https://styleme.pixnet.net/api/searchbrands/448/products/
 https://styleme.pixnet.net/api/search/product?brand_id=448

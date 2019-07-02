@@ -1,7 +1,7 @@
 CRAWL = scrapy crawl
 
-REPO = brand product product_info article
-CORPUS = article_styleme article_pixnet article_pixnet_post
+REPO = brand_meta product_meta product_info article_meta_product article_meta_category
+CORPUS = article_body_styleme article_body_pixnet article_body_pixnet_post
 TARGETS = $(REPO) $(CORPUS)
 
 .PHONY: all $(TARGETS)

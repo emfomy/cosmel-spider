@@ -5,7 +5,7 @@ import urllib
 
 import scrapy
 
-from utils.logging import logger
+from utils.logging import *
 
 from ..items import *
 

@@ -4,7 +4,7 @@ from functools import partial
 
 import scrapy
 
-from utils.logging import logger
+from utils.logging import *
 
 from ..db import Db
 from ..items import *
@@ -15,7 +15,11 @@ class Spider(scrapy.Spider):
 
     def start_requests(self):
         db = Db(self)
-        db.execute('SELECT id, name FROM brand.meta ORDER BY id')
+
+        db.execute('SELECT id FROM product ORDER BY id')
+        self.skip_set = {pid for (pid,) in db.fetchall()}
+
+        db.execute('SELECT id, name FROM brand ORDER BY id')
         res = db.fetchall()
         del db
 
@@ -37,8 +41,9 @@ class Spider(scrapy.Spider):
         data = json.loads(res.body)
         assert not data['error']
         for p in data['products']:
-            yield ProductMetaItem(
-                id       = p['id'],
-                name     = p['name'],
-                brand_id = bid,
-            )
+            if int(p['id']) not in self.skip_set:
+                yield ProductMetaItem(
+                    id       = p['id'],
+                    name     = p['name'],
+                    brand_id = bid,
+                )

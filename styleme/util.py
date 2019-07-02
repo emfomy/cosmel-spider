@@ -2,7 +2,7 @@
 
 import scrapy
 
-from utils.logging import logger
+from utils.logging import *
 
 def retry(res):
     if not res.request.meta.get('dont_cache'):
