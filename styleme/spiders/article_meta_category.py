@@ -44,8 +44,8 @@ class Spider(scrapy.Spider):
         assert not data['error']
         for a in data['articles']:
             if a['user'] is None: continue
-            aid = a['id']
-            if int(aid) not in self.skip_set:
+            aid = int(a['id'])
+            if aid not in self.skip_set:
                 yield ArticleMetaItem(
                     id         = aid,
                     author     = a['user']['user_name'],

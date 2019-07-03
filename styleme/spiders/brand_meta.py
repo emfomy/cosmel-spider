@@ -22,6 +22,12 @@ class Spider(scrapy.Spider):
         del db
 
         yield from self.do_brand_meta()
+        yield from self.do_items(
+            BrandMetaItem(
+                id   = 10000,
+                name = 'SHISEIDO 資生堂',
+            ),
+        )
 
     def do_brand_meta(self):
         url = 'https://styleme.pixnet.net/api/searchbrands'
@@ -35,8 +41,19 @@ class Spider(scrapy.Spider):
         data = json.loads(res.body)
         assert not data['error']
         for b in data['brands']:
-            if int(b['id']) not in self.skip_set:
+            bid = int(b['id'])
+            assert bid < 10000
+            if bid not in self.skip_set:
                 yield BrandMetaItem(
-                    id   = b['id'],
+                    id   = bid,
                     name = b['name'],
                 )
+
+    def do_items(self, *items):
+        yield scrapy.Request(
+            'https://styleme.pixnet.net',
+            callback=partial(self.parse_items, items=items),
+        )
+
+    def parse_items(self, _, *, items):
+        return iter(items)

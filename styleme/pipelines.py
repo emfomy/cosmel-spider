@@ -5,13 +5,7 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
-import getpass
-import json
-import os
-
-import psycopg2
 import scrapy
-import sshtunnel
 
 from utils.logging import *
 

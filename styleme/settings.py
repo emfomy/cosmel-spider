@@ -6,7 +6,7 @@ from utils.logging import *
 import json
 with open('.config.json') as fin:
     logger().success(f'Loading settings from {fin.name}')
-    CONFIG = json.load(fin)
+    CONFIG = json.load(fin)['styleme']
 
 # Settings
 LOG_ENABLED = False

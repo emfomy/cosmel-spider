@@ -47,15 +47,15 @@ class Spider(scrapy.Spider):
         assert not data['error']
         for a in data['articles']:
             if a['user'] is None: continue
-            aid = a['id']
-            if int(aid) not in self.skip_set_article_meta:
+            aid = int(a['id'])
+            if aid not in self.skip_set_article_meta:
                 yield ArticleMetaItem(
                     id         = aid,
                     author     = a['user']['user_name'],
                     is_styleme = bool(a['is_styleme']),
                     link       = a['link'],
                 )
-            if (int(pid), int(aid),) not in self.skip_set_product_article:
+            if (pid, aid,) not in self.skip_set_product_article:
                 yield ProductArticleItem(
                     id         = pid,
                     article_id = aid,
