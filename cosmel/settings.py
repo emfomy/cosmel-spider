@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
+# -*- coding:utf-8 -*-
 
 from utils.logging import *
 
@@ -6,14 +7,14 @@ from utils.logging import *
 import json
 with open('.config.json') as fin:
     logger().success(f'Loading settings from {fin.name}')
-    CONFIG = json.load(fin)['styleme']
+    CONFIG = json.load(fin)
 
 # Settings
 LOG_ENABLED = False
 CLOSESPIDER_ERRORCOUNT = 1
 RETRY_TIMES = 0
 
-# Scrapy settings for styleme project
+# Scrapy settings for cosmel project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -22,14 +23,14 @@ RETRY_TIMES = 0
 #     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'styleme'
+BOT_NAME = 'cosmel'
 
-SPIDER_MODULES = ['styleme.spiders']
-NEWSPIDER_MODULE = 'styleme.spiders'
+SPIDER_MODULES = ['cosmel.spiders']
+NEWSPIDER_MODULE = 'cosmel.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'styleme (+http://www.yourdomain.com)'
+#USER_AGENT = 'cosmel (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -60,13 +61,13 @@ ROBOTSTXT_OBEY = False
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'styleme.middlewares.StylemeSpiderMiddleware': 543,
+#    'cosmel.middlewares.CosmelSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    'styleme.middlewares.StylemeDownloaderMiddleware': 543,
+#    'cosmel.middlewares.CosmelDownloaderMiddleware': 543,
 #}
 
 # Enable or disable extensions
@@ -78,7 +79,7 @@ ROBOTSTXT_OBEY = False
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'styleme.pipelines.StylemePipeline': 300,
+   'cosmel.pipelines.CosmelPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -100,5 +101,5 @@ HTTPCACHE_ENABLED = True
 HTTPCACHE_EXPIRATION_SECS = 0
 HTTPCACHE_DIR = 'httpcache'
 # HTTPCACHE_IGNORE_HTTP_CODES = []
-HTTPCACHE_POLICY = 'styleme.httpcache.StylemePolicy'
-HTTPCACHE_STORAGE = 'styleme.httpcache.StylemeFilesystemCacheStorage'
+HTTPCACHE_POLICY = 'cosmel.httpcache.CosmelPolicy'
+HTTPCACHE_STORAGE = 'cosmel.httpcache.CosmelFilesystemCacheStorage'

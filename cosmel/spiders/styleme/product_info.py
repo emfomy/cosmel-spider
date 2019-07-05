@@ -6,16 +6,18 @@ import scrapy
 
 from utils.logging import *
 
-from utils.db import Db
-from ..util import retry
-from ..items import *
+from cosmel.db import Db
+from cosmel.util import retry
+from cosmel.items.styleme import *
 
 class Spider(scrapy.Spider):
-    name = __name__.split('.')[-1]
+    name = '_'.join(__name__.split('.')[-2:])
     allowed_domains = ['styleme.pixnet.net']
 
+    item_db_name = 'cosmel_styleme'
+
     def start_requests(self):
-        db = Db(self)
+        db = Db(self, self.item_db_name)
         db.execute('''
             SELECT id, name FROM product
             WHERE description IS NULL

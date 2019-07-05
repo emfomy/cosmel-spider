@@ -1,18 +1,10 @@
-# -*- coding: utf-8 -*-
-
-# Define here the models for your scraped items
-#
-# See documentation in:
-# https://doc.scrapy.org/en/latest/topics/items.html
+#!/usr/bin/env python3
+# -*- coding:utf-8 -*-
 
 import scrapy
+from .items import CosmelItem
 
-class StylemeItem(scrapy.Item):
-
-    def submit(self, db):
-        raise NotImplementedError
-
-class BrandMetaItem(StylemeItem):
+class BrandMetaItem(CosmelItem):
     id = scrapy.Field()
     name = scrapy.Field()
 
@@ -22,7 +14,7 @@ class BrandMetaItem(StylemeItem):
             (self['id'], self['name'],)
         )
 
-class ProductMetaItem(StylemeItem):
+class ProductMetaItem(CosmelItem):
     id = scrapy.Field()
     name = scrapy.Field()
     brand_id = scrapy.Field()
@@ -33,7 +25,7 @@ class ProductMetaItem(StylemeItem):
             (self['id'], self['name'], self['brand_id'],)
         )
 
-class ProductInfoItem(StylemeItem):
+class ProductInfoItem(CosmelItem):
     id = scrapy.Field()
     description = scrapy.Field()
 
@@ -47,7 +39,7 @@ class ProductInfoItem(StylemeItem):
             (self['description'], self['id'],)
         )
 
-class ProductQualityItem(StylemeItem):
+class ProductQualityItem(CosmelItem):
     id = scrapy.Field()
     type = scrapy.Field()
 
@@ -57,7 +49,7 @@ class ProductQualityItem(StylemeItem):
             (self['id'], self['type'],)
         )
 
-class ProductSpecItem(StylemeItem):
+class ProductSpecItem(CosmelItem):
     id = scrapy.Field()
     type = scrapy.Field()
     spec = scrapy.Field()
@@ -69,7 +61,7 @@ class ProductSpecItem(StylemeItem):
             (self['id'], self['type'], self['spec'], self['price'],)
         )
 
-class ProductArticleItem(StylemeItem):
+class ProductArticleItem(CosmelItem):
     id = scrapy.Field()
     article_id = scrapy.Field()
     type = scrapy.Field()
@@ -80,7 +72,7 @@ class ProductArticleItem(StylemeItem):
             (self['id'], self['article_id'], self['type'],)
         )
 
-class ArticleMetaItem(StylemeItem):
+class ArticleMetaItem(CosmelItem):
     id = scrapy.Field()
     author = scrapy.Field()
     is_styleme = scrapy.Field()
@@ -95,7 +87,7 @@ class ArticleMetaItem(StylemeItem):
             (self['id'], self['author'], self['is_styleme'], self['link'],)
         )
 
-class ArticleBodyItem(StylemeItem):
+class ArticleBodyItem(CosmelItem):
     id = scrapy.Field()
     title = scrapy.Field()
     category_id = scrapy.Field()

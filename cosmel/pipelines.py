@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
+# -*- coding:utf-8 -*-
 
 # Define your item pipelines here
 #
@@ -9,10 +10,10 @@ import scrapy
 
 from utils.logging import *
 
-from utils.db import Db
+from .db import Db
 from .items import *
 
-class StylemePipeline:
+class CosmelPipeline:
 
     count = 0
 
@@ -25,7 +26,7 @@ class StylemePipeline:
 
     def open_spider(self, spider):
         logger().success('Starting Pipeline ...')
-        self.db = Db(spider)
+        self.db = Db(spider, spider.item_db_name)
 
     def close_spider(self, spider):
         logger().success('Closing Pipeline ...')

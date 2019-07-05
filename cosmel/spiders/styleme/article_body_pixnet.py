@@ -6,18 +6,20 @@ import scrapy
 
 from utils.logging import *
 
-from utils.db import Db
-from ..items import *
+from cosmel.db import Db
+from cosmel.items.styleme import *
 
 class Spider(scrapy.Spider):
-    name = __name__.split('.')[-1]
+    name = '_'.join(__name__.split('.')[-2:])
     allowed_domains = ['styleme.pixnet.net']
     handle_httpstatus_list = [403, 404]
+
+    item_db_name = 'cosmel_styleme'
 
     def start_requests(self):
         self.count_error = 0
 
-        db = Db(self)
+        db = Db(self, self.item_db_name)
         db.execute('''
             SELECT id, author FROM article
             WHERE is_styleme=False

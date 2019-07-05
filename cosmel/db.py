@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
+# -*- coding:utf-8 -*-
 
 import os
 
@@ -9,13 +10,13 @@ from utils.logging import *
 
 class Db:
 
-    def __init__(self, spider):
+    def __init__(self, spider, db_name):
         config = spider.settings.get('CONFIG')
-        logger().success(f'Connecting Database ... {config["db_host"]} :: {config["db_name"]}')
+        logger().success(f'Connecting Database ... {config["db_host"]} :: {db_name}')
 
         self.mydb = pymysql.connect(
             host=config['db_host'],
-            database=config['db_name'],
+            database=db_name,
             user=config['db_user'],
             password=config['db_password'],
         )

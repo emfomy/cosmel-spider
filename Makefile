@@ -1,21 +1,35 @@
 CRAWL = scrapy crawl
 
-REPO = brand_meta brand_merge brand_alias product_meta product_info article_meta_product article_meta_category
-CORPUS = article_body_styleme article_body_pixnet article_body_pixnet_post
-TARGETS = $(REPO) $(CORPUS)
+STYLEME_REPO = \
+	styleme_brand_meta \
+	styleme_brand_merge \
+	styleme_brand_alias \
+	styleme_product_meta \
+	styleme_product_info \
+	styleme_article_meta_product \
+	styleme_article_meta_category
+
+STYLEME_CORPUS = \
+	styleme_article_body_styleme \
+	styleme_article_body_pixnet \
+	styleme_article_body_pixnet_post
+
+TARGETS = $(STYLEME_REPO) $(STYLEME_CORPUS)
 
 .PHONY: all $(TARGETS)
 
 # .NOTPARALLEL:
 
-all:
-	make $(TARGETS)
+all: styleme
 
-repo:
-	make $(REPO)
+styleme:
+	make $(STYLEME_REPO) $(STYLEME_CORPUS)
 
-corpus:
-	make $(CORPUS)
+styleme_repo:
+	make $(STYLEME_REPO)
+
+styleme_corpus:
+	make $(STYLEME_CORPUS)
 
 $(TARGETS):
 	$(CRAWL) $@
