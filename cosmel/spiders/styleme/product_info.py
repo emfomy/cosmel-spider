@@ -6,11 +6,11 @@ import scrapy
 
 from utils.logging import *
 
+from ..base import CosmelSpider
 from cosmel.db import Db
-from cosmel.util import retry
 from cosmel.items.styleme import *
 
-class Spider(scrapy.Spider):
+class Spider(scrapy.Spider, CosmelSpider):
     name = '_'.join(__name__.split('.')[-2:])
     allowed_domains = ['styleme.pixnet.net']
 
@@ -46,7 +46,7 @@ class Spider(scrapy.Spider):
     def parse_product_info(self, res, *, pid, page):
         data = json.loads(res.body)
         if data['error']:
-            yield from retry(res)
+            yield from self.retry(res)
             return
 
         p = data['product']

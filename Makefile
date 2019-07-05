@@ -1,5 +1,9 @@
 CRAWL = scrapy crawl
 
+COSMEL_REPO = \
+	cosmel_brand_styleme \
+	cosmel_brand_alias
+
 STYLEME_REPO = \
 	styleme_brand_meta \
 	styleme_brand_merge \
@@ -14,16 +18,20 @@ STYLEME_CORPUS = \
 	styleme_article_body_pixnet \
 	styleme_article_body_pixnet_post
 
-TARGETS = $(STYLEME_REPO) $(STYLEME_CORPUS)
+TARGETS = $(COSMEL_REPO) $(STYLEME_REPO) $(STYLEME_CORPUS)
 
 .PHONY: all $(TARGETS)
 
-# .NOTPARALLEL:
+all: cosmel styleme
 
-all: styleme
+cosmel:
+	make cosmel_repo
 
 styleme:
-	make $(STYLEME_REPO) $(STYLEME_CORPUS)
+	make styleme_repo styleme_corpus
+
+cosmel_repo:
+	make $(COSMEL_REPO)
 
 styleme_repo:
 	make $(STYLEME_REPO)

@@ -70,6 +70,10 @@ ROBOTSTXT_OBEY = False
 #    'cosmel.middlewares.CosmelDownloaderMiddleware': 543,
 #}
 
+DOWNLOAD_HANDLERS = {
+    'dummy': 'cosmel.handlers.DummyHandler',
+}
+
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
 #EXTENSIONS = {

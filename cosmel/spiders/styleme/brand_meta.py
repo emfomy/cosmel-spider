@@ -6,10 +6,11 @@ import scrapy
 
 from utils.logging import *
 
+from ..base import CosmelSpider
 from cosmel.db import Db
 from cosmel.items.styleme import *
 
-class Spider(scrapy.Spider):
+class Spider(scrapy.Spider, CosmelSpider):
     name = '_'.join(__name__.split('.')[-2:])
     allowed_domains = ['styleme.pixnet.net']
 
