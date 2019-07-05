@@ -14,14 +14,12 @@ class Spider(scrapy.Spider):
     allowed_domains = ['pixnet.net']
     handle_httpstatus_list = [406, 500]
 
-    item_db_name = 'cosmel_styleme'
-
     def start_requests(self):
         self.count_error = 0
 
-        db = Db(self, self.item_db_name)
+        db = Db(self)
         db.execute('''
-            SELECT id, author, link FROM article
+            SELECT id, author, link FROM cosmel_styleme.article
             WHERE is_styleme=False
               AND (title IS NULL OR body IS NULL)
         ''')

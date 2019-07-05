@@ -26,7 +26,7 @@ class CosmelPipeline:
 
     def open_spider(self, spider):
         logger().success('Starting Pipeline ...')
-        self.db = Db(spider, spider.item_db_name)
+        self.db = Db(spider)
 
     def close_spider(self, spider):
         logger().success('Closing Pipeline ...')

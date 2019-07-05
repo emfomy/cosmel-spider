@@ -10,13 +10,12 @@ from utils.logging import *
 
 class Db:
 
-    def __init__(self, spider, db_name):
+    def __init__(self, spider):
         config = spider.settings.get('CONFIG')
-        logger().success(f'Connecting Database ... {config["db_host"]} :: {db_name}')
+        logger().success(f'Connecting Database ... {config["db_host"]}')
 
         self.mydb = pymysql.connect(
             host=config['db_host'],
-            database=db_name,
             user=config['db_user'],
             password=config['db_password'],
         )

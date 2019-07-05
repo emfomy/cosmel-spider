@@ -13,15 +13,13 @@ class Spider(scrapy.Spider):
     name = '_'.join(__name__.split('.')[-2:])
     allowed_domains = ['styleme.pixnet.net']
 
-    item_db_name = 'cosmel_styleme'
-
     def start_requests(self):
-        db = Db(self, self.item_db_name)
+        db = Db(self)
 
-        db.execute('SELECT id, name FROM brand WHERE id NOT IN (SELECT id from brand_merge) ORDER BY id')
+        db.execute('SELECT id, name FROM cosmel_styleme.brand WHERE id NOT IN (SELECT id from brand_merge) ORDER BY id')
         res = db.fetchall()
 
-        db.execute('SELECT id, name FROM brand_merge ORDER BY id')
+        db.execute('SELECT id, name FROM cosmel_styleme.brand_merge ORDER BY id')
         res += db.fetchall()
 
         del db

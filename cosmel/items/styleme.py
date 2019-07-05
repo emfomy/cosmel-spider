@@ -10,7 +10,7 @@ class BrandMetaItem(CosmelItem):
 
     def submit(self, db):
         db.execute(
-            'INSERT IGNORE INTO brand (id, name) VALUES (%s, %s)',
+            'INSERT IGNORE INTO cosmel_styleme.brand (id, name) VALUES (%s, %s)',
             (self['id'], self['name'],)
         )
 
@@ -21,7 +21,7 @@ class ProductMetaItem(CosmelItem):
 
     def submit(self, db):
         db.execute(
-            'INSERT IGNORE INTO product (id, name, brand_id) VALUES (%s, %s, %s)',
+            'INSERT IGNORE INTO cosmel_styleme.product (id, name, brand_id) VALUES (%s, %s, %s)',
             (self['id'], self['name'], self['brand_id'],)
         )
 
@@ -32,7 +32,7 @@ class ProductInfoItem(CosmelItem):
     def submit(self, db):
         db.execute(
             '''
-                UPDATE product
+                UPDATE cosmel_styleme.product
                 SET description = %s
                 WHERE id = %s
             ''',
@@ -45,7 +45,7 @@ class ProductQualityItem(CosmelItem):
 
     def submit(self, db):
         db.execute(
-            'INSERT IGNORE INTO product_quality (id, type) VALUES (%s, %s)',
+            'INSERT IGNORE INTO cosmel_styleme.product_quality (id, type) VALUES (%s, %s)',
             (self['id'], self['type'],)
         )
 
@@ -57,7 +57,7 @@ class ProductSpecItem(CosmelItem):
 
     def submit(self, db):
         db.execute(
-            'INSERT IGNORE INTO product_spec (id, type, spec, price) VALUES (%s, %s, %s, %s)',
+            'INSERT IGNORE INTO cosmel_styleme.product_spec (id, type, spec, price) VALUES (%s, %s, %s, %s)',
             (self['id'], self['type'], self['spec'], self['price'],)
         )
 
@@ -68,7 +68,7 @@ class ProductArticleItem(CosmelItem):
 
     def submit(self, db):
         db.execute(
-            'INSERT IGNORE INTO product_article (id, article_id, type) VALUES (%s, %s, %s)',
+            'INSERT IGNORE INTO cosmel_styleme.product_article (id, article_id, type) VALUES (%s, %s, %s)',
             (self['id'], self['article_id'], self['type'],)
         )
 
@@ -83,7 +83,7 @@ class ArticleMetaItem(CosmelItem):
 
     def submit(self, db):
         db.execute(
-            'INSERT IGNORE INTO product_article (id, author, is_styleme, link) VALUES (%s, %s, %s, %s)',
+            'INSERT IGNORE INTO cosmel_styleme.product_article (id, author, is_styleme, link) VALUES (%s, %s, %s, %s)',
             (self['id'], self['author'], self['is_styleme'], self['link'],)
         )
 
@@ -100,7 +100,7 @@ class ArticleBodyItem(CosmelItem):
     def submit(self, db):
         db.execute(
             '''
-                UPDATE article
+                UPDATE cosmel_styleme.article
                 SET title = %s,
                     category_id = %s,
                     subcategory_id = %s,

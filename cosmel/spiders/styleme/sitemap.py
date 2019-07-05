@@ -16,8 +16,6 @@ class Spider(scrapy.Spider):
     allowed_domains = ['styleme.pixnet.net']
     start_urls = ['https://styleme.pixnet.net/sitemap.xml']
 
-    item_db_name = 'cosmel_styleme'
-
     def parse(self, res):
         s = scrapy.utils.sitemap.Sitemap(res.body)
         for loc in s:
