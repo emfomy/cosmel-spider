@@ -18,43 +18,8 @@ class BrandMetaItem(StylemeItem):
 
     def submit(self, db):
         db.execute(
-            'INSERT IGNORE INTO brand (`id`, `name`) VALUES (%s, %s)',
+            'INSERT IGNORE INTO brand (id, name) VALUES (%s, %s)',
             (self['id'], self['name'],)
-        )
-
-class BrandMergeItem(StylemeItem):
-    id = scrapy.Field()
-    name = scrapy.Field()
-    merge = scrapy.Field()
-
-    def submit(self, db):
-        db.execute(
-            'INSERT IGNORE INTO brand_merge (`id`, `name`, `merge_id`) VALUES (%s, %s, %s)',
-            (self['id'], self['name'], self['merge'])
-        )
-
-        db.execute(
-            'UPDATE brand_alias SET `id` = %s WHERE `id` = %s',
-            (self['merge'], self['id'])
-        )
-        db.execute(
-            'UPDATE product SET `brand_id` = %s WHERE `brand_id` = %s',
-            (self['merge'], self['id'])
-        )
-
-        db.execute(
-            'DELETE IGNORE FROM brand WHERE `id` = %s AND `name` = %s LIMIT 1',
-            (self['id'], self['name'])
-        )
-
-class BrandAliasItem(StylemeItem):
-    id = scrapy.Field()
-    alias = scrapy.Field()
-
-    def submit(self, db):
-        db.execute(
-            'INSERT IGNORE INTO brand_alias (`id`, `alias`) VALUES (%s, %s)',
-            (self['id'], self['alias'])
         )
 
 class ProductMetaItem(StylemeItem):
@@ -64,10 +29,8 @@ class ProductMetaItem(StylemeItem):
 
     def submit(self, db):
         db.execute(
-            'INSERT IGNORE INTO product (`id`, `name`, `brand_id`) VALUES (%s, %s, %s)',
-            # 'INSERT INTO product (`id`, `name`, `brand_id`) VALUES (%s, %s, %s)' \
-            # ' ON DUPLICATE KEY UPDATE `name` = %s, `brand_id` = %s',
-            (self['id'], self['name'], self['brand_id'], self['name'], self['brand_id'],)
+            'INSERT IGNORE INTO product (id, name, brand_id) VALUES (%s, %s, %s)',
+            (self['id'], self['name'], self['brand_id'],)
         )
 
 class ProductInfoItem(StylemeItem):
@@ -76,8 +39,12 @@ class ProductInfoItem(StylemeItem):
 
     def submit(self, db):
         db.execute(
-            'INSERT IGNORE INTO product_info (`id`, `description`) VALUES (%s, %s)',
-            (self['id'], self['description'],)
+            '''
+                UPDATE product
+                SET description = %s
+                WHERE id = %s
+            ''',
+            (self['description'], self['id'],)
         )
 
 class ProductQualityItem(StylemeItem):
@@ -86,7 +53,7 @@ class ProductQualityItem(StylemeItem):
 
     def submit(self, db):
         db.execute(
-            'INSERT IGNORE INTO product_quality (`id`, `type`) VALUES (%s, %s)',
+            'INSERT IGNORE INTO product_quality (id, type) VALUES (%s, %s)',
             (self['id'], self['type'],)
         )
 
@@ -98,7 +65,7 @@ class ProductSpecItem(StylemeItem):
 
     def submit(self, db):
         db.execute(
-            'INSERT IGNORE INTO product_spec (`id`, `type`, `spec`, `price`) VALUES (%s, %s, %s, %s)',
+            'INSERT IGNORE INTO product_spec (id, type, spec, price) VALUES (%s, %s, %s, %s)',
             (self['id'], self['type'], self['spec'], self['price'],)
         )
 
@@ -109,7 +76,7 @@ class ProductArticleItem(StylemeItem):
 
     def submit(self, db):
         db.execute(
-            'INSERT IGNORE INTO product_article (`id`, `article_id`, `type`) VALUES (%s, %s, %s)',
+            'INSERT IGNORE INTO product_article (id, article_id, type) VALUES (%s, %s, %s)',
             (self['id'], self['article_id'], self['type'],)
         )
 
@@ -124,7 +91,7 @@ class ArticleMetaItem(StylemeItem):
 
     def submit(self, db):
         db.execute(
-            'INSERT IGNORE INTO article (`id`, `author`, `is_styleme`, `link`) VALUES (%s, %s, %s, %s)',
+            'INSERT IGNORE INTO product_article (id, author, is_styleme, link) VALUES (%s, %s, %s, %s)',
             (self['id'], self['author'], self['is_styleme'], self['link'],)
         )
 
@@ -140,10 +107,13 @@ class ArticleBodyItem(StylemeItem):
 
     def submit(self, db):
         db.execute(
-            'INSERT IGNORE INTO article_info (`id`, `title`, `category_id`, `subcategory_id`) VALUES (%s, %s, %s, %s)',
-            (self['id'], self['title'], self['category_id'], self['subcategory_id'],)
-        )
-        db.execute(
-            'INSERT IGNORE INTO article_body (`id`, `body`) VALUES (%s, %s)',
-            (self['id'], self['body'],)
+            '''
+                UPDATE article
+                SET title = %s,
+                    category_id = %s,
+                    subcategory_id = %s,
+                    body = %s
+                WHERE id = %s
+            ''',
+            (self['title'], self['category_id'], self['subcategory_id'], self['body'], self['id'],)
         )

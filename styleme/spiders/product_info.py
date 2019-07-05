@@ -6,7 +6,7 @@ import scrapy
 
 from utils.logging import *
 
-from ..db import Db
+from utils.db import Db
 from ..util import retry
 from ..items import *
 
@@ -16,19 +16,14 @@ class Spider(scrapy.Spider):
 
     def start_requests(self):
         db = Db(self)
-        db.execute('SELECT id, name FROM product ORDER BY id')
+        db.execute('''
+            SELECT id, name FROM product
+            WHERE description IS NULL
+               OR id NOT IN (SELECT id FROM product_spec)
+               OR id NOT IN (SELECT id FROM product_quality)
+            ORDER BY id
+        ''')
         res = db.fetchall()
-
-        db.execute('SELECT id FROM product_info')
-        info_id = set(v[0] for v in db.fetchall())
-
-        db.execute('SELECT id FROM product_spec')
-        spec_id = set(v[0] for v in db.fetchall())
-
-        db.execute('SELECT id FROM product_quality')
-        quality_id = set(v[0] for v in db.fetchall())
-
-        res = [line for line in res if (line[0] not in info_id or line[0] not in spec_id or line[0] not in quality_id)]
         del db
 
         total = len(res)

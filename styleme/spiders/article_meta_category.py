@@ -6,7 +6,7 @@ import scrapy
 
 from utils.logging import *
 
-from ..db import Db
+from utils.db import Db
 from ..items import *
 
 class Spider(scrapy.Spider):
@@ -19,7 +19,7 @@ class Spider(scrapy.Spider):
         db.execute('SELECT id FROM article ORDER BY id')
         self.skip_set = {aid for (aid,) in db.fetchall()}
 
-        db.execute('SELECT category_id, id, name FROM category_sub ORDER BY category_id, id')
+        db.execute('SELECT category_id, id, name FROM article_category_sub ORDER BY category_id, id')
         res = db.fetchall()
 
         res = [line for line in res if (line[0] in [4, 7, 10, 19])]
@@ -52,5 +52,6 @@ class Spider(scrapy.Spider):
                     is_styleme = bool(a['is_styleme']),
                     link       = a['link'],
                 )
+
         if page < data['total_page']:
             yield from self.do_article_meta_category(cid=cid, csid=csid, page=page+1)

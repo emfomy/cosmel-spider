@@ -6,7 +6,7 @@ import scrapy
 
 from utils.logging import *
 
-from ..db import Db
+from utils.db import Db
 from ..items import *
 
 class Spider(scrapy.Spider):
@@ -15,16 +15,12 @@ class Spider(scrapy.Spider):
 
     def start_requests(self):
         db = Db(self)
-        db.execute('SELECT id, author FROM article WHERE is_styleme=True')
+        db.execute('''
+            SELECT id, author FROM article
+            WHERE is_styleme=True
+              AND (title IS NULL OR body IS NULL)
+        ''')
         res = db.fetchall()
-
-        db.execute('SELECT id FROM article_info')
-        info_id = set(v[0] for v in db.fetchall())
-
-        db.execute('SELECT id FROM article_body')
-        body_id = set(v[0] for v in db.fetchall())
-
-        res = [line for line in res if (line[0] not in info_id or line[0] not in body_id)]
         del db
 
         total = len(res)

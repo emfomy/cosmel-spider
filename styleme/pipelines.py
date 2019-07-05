@@ -9,7 +9,7 @@ import scrapy
 
 from utils.logging import *
 
-from .db import Db
+from utils.db import Db
 from .items import *
 
 class StylemePipeline:

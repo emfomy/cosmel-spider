@@ -6,7 +6,7 @@ import scrapy
 
 from utils.logging import *
 
-from ..db import Db
+from utils.db import Db
 from ..items import *
 
 class Spider(scrapy.Spider):
@@ -19,11 +19,8 @@ class Spider(scrapy.Spider):
         db.execute('SELECT id FROM product ORDER BY id')
         self.skip_set = {pid for (pid,) in db.fetchall()}
 
-        db.execute('SELECT id, name, id FROM brand WHERE id NOT IN (SELECT id from brand_merge) ORDER BY id')
+        db.execute('SELECT id, name, id FROM brand ORDER BY id')
         res = db.fetchall()
-
-        db.execute('SELECT id, name, merge_id FROM brand_merge ORDER BY id')
-        res += db.fetchall()
 
         del db
 

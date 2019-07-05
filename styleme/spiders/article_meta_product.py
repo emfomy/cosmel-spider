@@ -6,7 +6,7 @@ import scrapy
 
 from utils.logging import *
 
-from ..db import Db
+from utils.db import Db
 from ..items import *
 
 class Spider(scrapy.Spider):
@@ -48,6 +48,7 @@ class Spider(scrapy.Spider):
         for a in data['articles']:
             if a['user'] is None: continue
             aid = int(a['id'])
+
             if aid not in self.skip_set_article_meta:
                 yield ArticleMetaItem(
                     id         = aid,
@@ -55,11 +56,13 @@ class Spider(scrapy.Spider):
                     is_styleme = bool(a['is_styleme']),
                     link       = a['link'],
                 )
+
             if (pid, aid,) not in self.skip_set_product_article:
                 yield ProductArticleItem(
                     id         = pid,
                     article_id = aid,
                     type       = type,
                 )
+
         if page < data['total_page']:
             yield from self.do_article_meta_category(pid=pid, type=type, page=page+1)
