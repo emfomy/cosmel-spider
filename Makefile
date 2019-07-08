@@ -2,12 +2,11 @@ CRAWL = scrapy crawl
 
 COSMEL_REPO = \
 	cosmel_brand_styleme \
-	cosmel_brand_alias
+	cosmel_brand_alias \
+	cosmel_product_styleme
 
 STYLEME_REPO = \
 	styleme_brand_meta \
-	styleme_brand_merge \
-	styleme_brand_alias \
 	styleme_product_meta \
 	styleme_product_info \
 	styleme_article_meta_product \
@@ -20,7 +19,7 @@ STYLEME_CORPUS = \
 
 TARGETS = $(COSMEL_REPO) $(STYLEME_REPO) $(STYLEME_CORPUS)
 
-.PHONY: all $(TARGETS)
+.PHONY: all cosmel styleme $(TARGETS)
 
 all: cosmel styleme
 

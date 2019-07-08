@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 
 import os
+import warnings
 
 import pymysql
 import scrapy
@@ -31,11 +32,17 @@ class Db:
             logger().error(exceptstr(e))
 
     def execute(self, *args, **kwargs):
-        return self.mycur.execute(*args, **kwargs)
+        with warnings.catch_warnings():
+            warnings.simplefilter('error', category=pymysql.Warning)
+            return self.mycur.execute(*args, **kwargs)
 
     def fetchall(self, *args, **kwargs):
-        return self.mycur.fetchall(*args, **kwargs)
+        with warnings.catch_warnings():
+            warnings.simplefilter('error', category=pymysql.Warning)
+            return self.mycur.fetchall(*args, **kwargs)
 
     def commit(self, *args, **kwargs):
         logger().success('Committing Database ...')
-        return self.mydb.commit(*args, **kwargs)
+        with warnings.catch_warnings():
+            warnings.simplefilter('error', category=pymysql.Warning)
+            return self.mydb.commit(*args, **kwargs)

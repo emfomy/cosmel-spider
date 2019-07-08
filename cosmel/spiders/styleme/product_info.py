@@ -51,7 +51,7 @@ class Spider(scrapy.Spider, CosmelSpider):
 
         p = data['product']
         yield ProductInfoItem(
-            id   = p['id'],
+            id          = p['id'],
             description = p['desc'],
         )
 
@@ -65,8 +65,8 @@ class Spider(scrapy.Spider, CosmelSpider):
             price = str(spec['price'])
             if not price.isnumeric() or price == '0': continue
             yield ProductSpecItem(
-                id   = p['id'],
-                type = spec['spec_name'],
-                spec = spec['spec'],
+                id    = p['id'],
+                type  = spec['spec_name'],
+                spec  = spec['spec'],
                 price = price,
             )

@@ -16,8 +16,11 @@ class Spider(scrapy.Spider, CosmelSpider):
     def start_requests(self):
         db = Db(self)
 
-        db.execute('SELECT id FROM cosmel.brand ORDER BY id')
-        self.skip_set = {bid for (bid,) in db.fetchall()}
+        db.execute('SELECT id, name FROM cosmel.brand ORDER BY id')
+        self.skip_set_brand_meta = {bid: name for (bid, name,) in db.fetchall()}
+
+        db.execute('SELECT id, cosmel_id FROM cosmel_styleme.brand ORDER BY id')
+        self.skip_set_brand_styleme = {styleme_id: cosmel_id for (styleme_id, cosmel_id,) in db.fetchall()}
 
         db.execute('SELECT id, name FROM cosmel_styleme.brand ORDER BY id')
         res = db.fetchall()
@@ -44,7 +47,7 @@ class Spider(scrapy.Spider, CosmelSpider):
             cosmel_bid, cosmel_bname = merge_tuple[0]
             assert cosmel_dict[cosmel_bid] == cosmel_bname
             for styleme_bid, styleme_bname in merge_tuple[1:]:
-                logger().info(f'{cosmel_bid} {cosmel_bname} <- {styleme_bid} {styleme_bname}')
+                logger().verbose(f'{cosmel_bid} {cosmel_bname} <- {styleme_bid} {styleme_bname}')
                 assert cosmel_dict[styleme_bid] == styleme_bname
                 del cosmel_dict[styleme_bid]
                 styleme_dict[styleme_bid] = cosmel_bid
@@ -52,7 +55,7 @@ class Spider(scrapy.Spider, CosmelSpider):
         # Items
         items = []
         for (bid, bname,) in cosmel_dict.items():
-            if bid not in self.skip_set:
+            if bname != self.skip_set_brand_meta.get(bid):
                 items.append(
                     BrandMetaItem(
                         id   = bid,
@@ -61,18 +64,15 @@ class Spider(scrapy.Spider, CosmelSpider):
                 )
 
         for (styleme_id, cosmel_id,) in styleme_dict.items():
-            items.append(
-                BrandStylemeItem(
-                    styleme_id = styleme_id,
-                    cosmel_id  = cosmel_id,
+            if cosmel_id != self.skip_set_brand_styleme.get(styleme_id):
+                items.append(
+                    BrandStylemeItem(
+                        styleme_id = styleme_id,
+                        cosmel_id  = cosmel_id,
+                    )
                 )
-            )
 
         yield from self.do_items(*items)
-
-    rename_list = [
-        (11, 'SHISEIDO 資生堂（東京櫃）', 'SHISEIDO 資生堂',)
-    ]
 
     merge_list = [
         [(11, 'SHISEIDO 資生堂',), (29, 'SHISEIDO 資生堂（國際櫃）',),],
@@ -85,4 +85,8 @@ class Spider(scrapy.Spider, CosmelSpider):
         [(976, '西班牙Babaria',), (1030, 'babaria 西班牙babaria',),],
         [(925, 'A’PIEU',), (1009, 'A\'PIEU',),],
         [(1525, 'Natura Bissé',), (1597, 'Natura Bissé',),],
+    ]
+
+    rename_list = [
+        (11, 'SHISEIDO 資生堂（東京櫃）', 'SHISEIDO 資生堂',)
     ]
