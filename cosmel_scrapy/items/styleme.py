@@ -16,27 +16,27 @@ class BrandMetaItem(CosmelItem):
 
 class ProductMetaItem(CosmelItem):
     id = scrapy.Field()
-    name = scrapy.Field()
     brand_id = scrapy.Field()
+    name = scrapy.Field()
 
     def submit(self, db):
         db.execute(
-            'INSERT IGNORE INTO cosmel_styleme.product (id, name, brand_id) VALUES (%s, %s, %s)',
-            (self['id'], self['name'], self['brand_id'],)
+            'INSERT IGNORE INTO cosmel_styleme.product (id, brand_id, name) VALUES (%s, %s, %s)',
+            (self['id'], self['brand_id'], self['name'],)
         )
 
 class ProductInfoItem(CosmelItem):
     id = scrapy.Field()
-    description = scrapy.Field()
+    descr = scrapy.Field()
 
     def submit(self, db):
         db.execute(
             '''
                 UPDATE cosmel_styleme.product
-                SET description = %s
+                SET descr = %s
                 WHERE id = %s
             ''',
-            (self['description'], self['id'],)
+            (self['descr'], self['id'],)
         )
 
 class ProductQualityItem(CosmelItem):

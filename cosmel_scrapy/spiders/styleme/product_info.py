@@ -7,8 +7,8 @@ import scrapy
 from utils.logging import *
 
 from ..base import CosmelSpider
-from cosmel.db import Db
-from cosmel.items.styleme import *
+from cosmel_scrapy.db import Db
+from cosmel_scrapy.items.styleme import *
 
 class Spider(scrapy.Spider, CosmelSpider):
     name = '_'.join(__name__.split('.')[-2:])
@@ -18,7 +18,7 @@ class Spider(scrapy.Spider, CosmelSpider):
         db = Db(self)
         db.execute('''
             SELECT id, name FROM cosmel_styleme.product
-            WHERE description IS NULL
+            WHERE descr IS NULL
                OR id NOT IN (SELECT id FROM cosmel_styleme.product_spec)
                OR id NOT IN (SELECT id FROM cosmel_styleme.product_quality)
             ORDER BY id
@@ -51,8 +51,8 @@ class Spider(scrapy.Spider, CosmelSpider):
 
         p = data['product']
         yield ProductInfoItem(
-            id          = p['id'],
-            description = p['desc'],
+            id    = p['id'],
+            descr = p['descr'],
         )
 
         for quality in p['qualities']:

@@ -1,9 +1,14 @@
-CRAWL = scrapy crawl
+ROOT  = ../code
+
+SCRAPY = PYTHONPATH=$(ROOT):$(PYTHONPATH) scrapy
+CRAWL = $(SCRAPY) crawl
 
 COSMEL_REPO = \
 	cosmel_brand_styleme \
+	cosmel_brand_styleme_old \
 	cosmel_brand_alias \
-	cosmel_product_styleme
+	cosmel_product_styleme \
+	cosmel_product_styleme_old
 
 STYLEME_REPO = \
 	styleme_brand_meta \
@@ -17,9 +22,12 @@ STYLEME_CORPUS = \
 	styleme_article_body_pixnet \
 	styleme_article_body_pixnet_post
 
-TARGETS = $(COSMEL_REPO) $(STYLEME_REPO) $(STYLEME_CORPUS)
+STYLEME_OLD_REPO = \
+	styleme_old_product_meta
 
-.PHONY: all cosmel styleme $(TARGETS)
+TARGETS = $(COSMEL_REPO) $(STYLEME_REPO) $(STYLEME_CORPUS) $(STYLEME_OLD_REPO)
+
+.PHONY: all list cosmel styleme styleme_old $(TARGETS)
 
 all: cosmel styleme
 
@@ -28,6 +36,9 @@ cosmel:
 
 styleme:
 	make styleme_repo styleme_corpus
+
+styleme_old:
+	make styleme_old_repo
 
 cosmel_repo:
 	make $(COSMEL_REPO)
@@ -38,5 +49,11 @@ styleme_repo:
 styleme_corpus:
 	make $(STYLEME_CORPUS)
 
+styleme_old_repo:
+	make $(STYLEME_OLD_REPO)
+
 $(TARGETS):
 	$(CRAWL) $@
+
+list:
+	$(SCRAPY) $@

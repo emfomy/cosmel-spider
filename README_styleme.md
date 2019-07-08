@@ -1,6 +1,4 @@
-# CosmEL Spider
-
-## Spiders
+## StyleMe Spiders
 
 ### brand_meta
 - in:  `https://styleme.pixnet.net/api/searchbrands/`

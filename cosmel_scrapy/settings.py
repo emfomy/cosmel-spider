@@ -25,8 +25,8 @@ RETRY_TIMES = 0
 
 BOT_NAME = 'cosmel'
 
-SPIDER_MODULES = ['cosmel.spiders']
-NEWSPIDER_MODULE = 'cosmel.spiders'
+SPIDER_MODULES = ['cosmel_scrapy.spiders']
+NEWSPIDER_MODULE = 'cosmel_scrapy.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -61,17 +61,17 @@ ROBOTSTXT_OBEY = False
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'cosmel.middlewares.CosmelSpiderMiddleware': 543,
+#    'cosmel_scrapy.middlewares.CosmelSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    'cosmel.middlewares.CosmelDownloaderMiddleware': 543,
+#    'cosmel_scrapy.middlewares.CosmelDownloaderMiddleware': 543,
 #}
 
 DOWNLOAD_HANDLERS = {
-    'dummy': 'cosmel.handlers.DummyHandler',
+    'dummy': 'cosmel_scrapy.handlers.DummyHandler',
 }
 
 # Enable or disable extensions
@@ -83,7 +83,7 @@ DOWNLOAD_HANDLERS = {
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'cosmel.pipelines.CosmelPipeline': 300,
+   'cosmel_scrapy.pipelines.CosmelPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -105,5 +105,5 @@ HTTPCACHE_ENABLED = True
 HTTPCACHE_EXPIRATION_SECS = 0
 HTTPCACHE_DIR = 'httpcache'
 # HTTPCACHE_IGNORE_HTTP_CODES = []
-HTTPCACHE_POLICY = 'cosmel.httpcache.CosmelPolicy'
-HTTPCACHE_STORAGE = 'cosmel.httpcache.CosmelFilesystemCacheStorage'
+HTTPCACHE_POLICY = 'cosmel_scrapy.httpcache.CosmelPolicy'
+HTTPCACHE_STORAGE = 'cosmel_scrapy.httpcache.CosmelFilesystemCacheStorage'

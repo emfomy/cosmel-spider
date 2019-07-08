@@ -7,8 +7,8 @@ import scrapy
 from utils.logging import *
 
 from ..base import CosmelSpider
-from cosmel.db import Db
-from cosmel.items.cosmel import *
+from cosmel_scrapy.db import Db
+from cosmel_scrapy.items.cosmel import *
 
 class Spider(scrapy.Spider, CosmelSpider):
     name = '_'.join(__name__.split('.')[-2:])
@@ -16,8 +16,8 @@ class Spider(scrapy.Spider, CosmelSpider):
     def start_requests(self):
         db = Db(self)
 
-        db.execute('SELECT id, name FROM cosmel.brand ORDER BY id')
-        self.skip_set_brand_meta = {bid: name for (bid, name,) in db.fetchall()}
+        db.execute('SELECT id, orig_name FROM cosmel.brand ORDER BY id')
+        self.skip_set_brand_meta = {bid: bname for (bid, bname,) in db.fetchall()}
 
         db.execute('SELECT id, cosmel_id FROM cosmel_styleme.brand ORDER BY id')
         self.skip_set_brand_styleme = {styleme_id: cosmel_id for (styleme_id, cosmel_id,) in db.fetchall()}
@@ -58,8 +58,8 @@ class Spider(scrapy.Spider, CosmelSpider):
             if bname != self.skip_set_brand_meta.get(bid):
                 items.append(
                     BrandMetaItem(
-                        id   = bid,
-                        name = bname,
+                        id        = bid,
+                        orig_name = bname,
                     )
                 )
 
@@ -82,11 +82,13 @@ class Spider(scrapy.Spider, CosmelSpider):
         [(487, 'neuve 惹我',), (916, 'FITIT&WHITIA',),],
         [(511, 'Anime Cosme',), (1000, 'ANIMECOSME',),],
         [(868, 'EQUILIBRA 義貝拉',), (940, 'PERLABELLA 義貝拉',), (943, 'SYRIO',),],
+        [(970, 'MEMEBOX',), (1402, 'PONY EFFECT',), (1606, 'PONY女王',),],
         [(976, '西班牙Babaria',), (1030, 'babaria 西班牙babaria',),],
         [(925, 'A’PIEU',), (1009, 'A\'PIEU',),],
         [(1525, 'Natura Bissé',), (1597, 'Natura Bissé',),],
     ]
 
     rename_list = [
-        (11, 'SHISEIDO 資生堂（東京櫃）', 'SHISEIDO 資生堂',)
+        (11, 'SHISEIDO 資生堂（東京櫃）', 'SHISEIDO 資生堂',),
+        (970, 'I’M MEME', 'MEMEBOX',),
     ]
