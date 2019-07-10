@@ -23,7 +23,7 @@ _level_styles = {
     'verbose': {'color': 'magenta'},
     'info': {'color': 'cyan'},
     'notice': {'background': 'cyan', 'bold': True},
-    'warning': {'background': 'yellow', 'bold': True},
+    'warning': {'color': 'yellow', 'bold': True},
     'success': {'color': 'green', 'bold': True},
     'error': {'color': 'red', 'bold': True},
     'critical': {'background': 'red', 'bold': True},

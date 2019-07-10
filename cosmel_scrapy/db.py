@@ -36,6 +36,16 @@ class Db:
             warnings.simplefilter('error', category=pymysql.Warning)
             return self.mycur.execute(*args, **kwargs)
 
+    def executemany(self, *args, **kwargs):
+        with warnings.catch_warnings():
+            warnings.simplefilter('error', category=pymysql.Warning)
+            return self.mycur.executemany(*args, **kwargs)
+
+    def fetchone(self, *args, **kwargs):
+        with warnings.catch_warnings():
+            warnings.simplefilter('error', category=pymysql.Warning)
+            return self.mycur.fetchone(*args, **kwargs)
+
     def fetchall(self, *args, **kwargs):
         with warnings.catch_warnings():
             warnings.simplefilter('error', category=pymysql.Warning)

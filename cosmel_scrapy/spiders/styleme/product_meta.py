@@ -42,7 +42,7 @@ class Spider(scrapy.Spider, CosmelSpider):
     def parse_product_meta(self, res, *, bid):
         data = json.loads(res.body)
         if data['error']:
-            logger().error(f'#bid={bid} Error?')
+            logger().error(f'Unknown Brand #bid={bid}')
             return
         # assert not data['error']
         for p in data['products']:

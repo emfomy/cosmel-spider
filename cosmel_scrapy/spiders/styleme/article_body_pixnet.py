@@ -21,7 +21,7 @@ class Spider(scrapy.Spider, CosmelSpider):
         db = Db(self)
         db.execute('''
             SELECT id, author FROM cosmel_styleme.article
-            WHERE is_styleme=False
+            WHERE is_styleme=False AND is_old=False
               AND (title IS NULL OR body IS NULL)
         ''')
         res = db.fetchall()

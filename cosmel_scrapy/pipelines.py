@@ -46,6 +46,7 @@ class CosmelPipeline:
             item.submit(self.db)
         except Exception as e:
             logger().error(exceptstr(e))
+            logger().spam(item)
 
         self.count += 1
         if self.count >= 1000:

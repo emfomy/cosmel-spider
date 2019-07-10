@@ -20,7 +20,7 @@ class Spider(scrapy.Spider, CosmelSpider):
             SELECT id, name FROM cosmel_styleme.product
             WHERE descr IS NULL
                OR id NOT IN (SELECT id FROM cosmel_styleme.product_spec)
-               OR id NOT IN (SELECT id FROM cosmel_styleme.product_quality)
+               OR id NOT IN (SELECT id FROM cosmel_styleme.product_category)
             ORDER BY id
         ''')
         res = db.fetchall()
@@ -52,13 +52,13 @@ class Spider(scrapy.Spider, CosmelSpider):
         p = data['product']
         yield ProductInfoItem(
             id    = p['id'],
-            descr = p['descr'],
+            descr = p['desc'],
         )
 
-        for quality in p['qualities']:
-            yield ProductQualityItem(
+        for category in p['qualities']:
+            yield ProductCategoryItem(
                 id   = p['id'],
-                type = quality,
+                type = category,
             )
 
         for spec in p['spec']:

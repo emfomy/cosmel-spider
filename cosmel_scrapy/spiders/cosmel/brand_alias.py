@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import json
 from functools import partial
 
 import scrapy
@@ -17,7 +16,7 @@ class Spider(scrapy.Spider, CosmelSpider):
         db = Db(self)
 
         db.execute('SELECT id, alias FROM cosmel.brand_alias ORDER BY id')
-        self.skip_set_brand_alias = {balias: bid for (bid, balias,) in db.fetchall()}
+        self.skip_set_brand_alias = {bbalias: bid for (bid, bbalias,) in db.fetchall()}
 
         db.execute('SELECT id, orig_name FROM cosmel.brand ORDER BY id')
         res = db.fetchall()
@@ -31,18 +30,18 @@ class Spider(scrapy.Spider, CosmelSpider):
             bid2bname[bid] = bname
 
         # Check typo
-        for (bid, bname, balias,) in self.alias_list:
-            assert bid2bname[bid] == bname, (bid, bname, balias,)
+        for (bid, bname, bbalias,) in self.alias_list:
+            assert bid2bname[bid] == bname, (bid, bname, bbalias,)
 
         # Items
         items = []
-        for (bid, bname, balias,) in self.alias_list:
-            logger().info(f'{bid} {bname} <- {balias}')
-            if bid != self.skip_set_brand_alias.get(balias):
+        for (bid, bname, bbalias,) in self.alias_list:
+            logger().info(f'{bid} {bname} <- {bbalias}')
+            if bid != self.skip_set_brand_alias.get(bbalias):
                 items.append(
                     BrandAliasItem(
                         id    = bid,
-                        alias = balias,
+                        alias = bbalias,
                     )
                 )
 
@@ -810,4 +809,26 @@ class Spider(scrapy.Spider, CosmelSpider):
         (1612, 'ANNY', 'anny'),
         (1615, 'OFRA Cosmetics', 'ofracosmetics'),
         (1615, 'OFRA Cosmetics', 'ofra□cosmetics'),
+        (9000, 'Bio oil 百洛', 'biooil'),
+        (9000, 'Bio oil 百洛', 'bio□oil'),
+        (9000, 'Bio oil 百洛', '百洛'),
+        (9002, 'CORSICA 科皙佳', 'corsica'),
+        (9002, 'CORSICA 科皙佳', '科皙佳'),
+        (9004, 'Covermark', 'covermark'),
+        (9006, 'HACCI', 'hacci'),
+        (9007, 'LUDEYA 露蒂雅', 'ludeya'),
+        (9007, 'LUDEYA 露蒂雅', '露蒂雅'),
+        (9009, 'MUJI 無印良品', 'muji'),
+        (9009, 'MUJI 無印良品', '無印良品'),
+        (9010, 'Mdmmd. 明洞國際', 'mdmmd'),
+        (9010, 'Mdmmd. 明洞國際', '明洞國際'),
+        (9011, 'PURE', 'pure'),
+        (9012, 'Panatec 沛莉緹', 'panatec'),
+        (9012, 'Panatec 沛莉緹', '沛莉緹'),
+        (9014, 'TSZJITSUEI 瓷肌萃', 'tszjitsuei'),
+        (9014, 'TSZJITSUEI 瓷肌萃', '瓷肌萃'),
+        (9015, 'White', 'white'),
+        (9017, 'motives 莫蒂膚', 'motives'),
+        (9017, 'motives 莫蒂膚', '莫蒂膚'),
+        (9018, '御泥坊', '御泥坊'),
     ]

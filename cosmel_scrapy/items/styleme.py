@@ -39,13 +39,13 @@ class ProductInfoItem(CosmelItem):
             (self['descr'], self['id'],)
         )
 
-class ProductQualityItem(CosmelItem):
+class ProductCategoryItem(CosmelItem):
     id = scrapy.Field()
     type = scrapy.Field()
 
     def submit(self, db):
         db.execute(
-            'INSERT IGNORE INTO cosmel_styleme.product_quality (id, type) VALUES (%s, %s)',
+            'INSERT IGNORE INTO cosmel_styleme.product_category (id, type) VALUES (%s, %s)',
             (self['id'], self['type'],)
         )
 

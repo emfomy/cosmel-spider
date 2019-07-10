@@ -118,7 +118,7 @@ class ProductStylemeOldItem(CosmelItem):
             (self['cosmel_id'], self['styleme_id'],)
         )
 
-class ProductPurgeItem(CosmelItem):
+class ProductNameItem(CosmelItem):
     id = scrapy.Field()
     name = scrapy.Field()
 
@@ -132,12 +132,71 @@ class ProductPurgeItem(CosmelItem):
             (self['name'], self['id'],)
         )
 
-class ProductArticleItem(CosmelItem):
+class ProductSentenceItem(CosmelItem):
     id = scrapy.Field()
-    article_id = scrapy.Field()
+    lines = scrapy.Field()
+
+    def __repr__(self):
+        return repr({ k: v for k, v in self.items() if k != 'lines' })
+
+    def submit(self, db):
+
+        pid = self['id']
+        vals = [(pid, sid, line,) for (sid, line,) in enumerate(self['lines'])]
+        db.executemany(
+            'INSERT IGNORE INTO cosmel.product_descr (product_id, sentence_id, text) VALUES (%s, %s, %s)',
+            vals
+        )
+
+class ArticleMetaItem(CosmelItem):
+    id = scrapy.Field()
+    link = scrapy.Field()
+    orig_title = scrapy.Field()
+    subcategory_id = scrapy.Field()
+
+    def __repr__(self):
+        return repr({ k: v for k, v in self.items() if k != 'link' })
 
     def submit(self, db):
         db.execute(
-            'INSERT IGNORE INTO cosmel_styleme.product_article (id, article_id) VALUES (%s, %s, %s)',
-            (self['id'], self['article_id'],)
+            'INSERT IGNORE INTO cosmel.article (id, link, orig_title, subcategory_id) VALUES (%s, %s, %s)',
+            (self['id'], self['link'], self['orig_title'], self['subcategory_id'],)
+        )
+
+class ArticleBodyItem(CosmelItem):
+    id = scrapy.Field()
+    callback = scrapy.Field()
+
+    def __repr__(self):
+        return repr({ k: v for k, v in self.items() if k != 'callback' })
+
+    def submit(self, db):
+
+        html_body = self['callback']()
+
+        db.execute(
+            '''
+                UPDATE cosmel.article
+                SET html_body = %s
+                WHERE id = %s
+            ''',
+            (html_body, self['id'],)
+        )
+
+class ArticleSentenceItem(CosmelItem):
+    aid = scrapy.Field()
+    callback = scrapy.Field()
+
+    def __repr__(self):
+        return repr({ k: v for k, v in self.items() if k != 'callback' })
+
+    def submit(self, db):
+
+        aid = self['aid']
+        lines, num_title = self['callback']()
+
+        vals = [(aid, sid, line, (sid < num_title),) for (sid, line,) in enumerate(lines)]
+        db.executemany(
+            'INSERT IGNORE INTO cosmel.article_content (article_id, sentence_id, text, is_title) VALUES (%s, %s, %s, %s)',
+            vals
         )

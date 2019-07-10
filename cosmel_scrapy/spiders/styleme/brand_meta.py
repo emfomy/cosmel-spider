@@ -37,6 +37,7 @@ class Spider(scrapy.Spider, CosmelSpider):
         assert not data['error']
         for b in data['brands']:
             bid = int(b['id'])
+            assert bid < 9000
             if bid not in self.skip_set:
                 yield BrandMetaItem(
                     id   = bid,

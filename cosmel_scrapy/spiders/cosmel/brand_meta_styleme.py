@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import json
 from functools import partial
 
 import scrapy
@@ -75,14 +74,19 @@ class Spider(scrapy.Spider, CosmelSpider):
         yield from self.do_items(*items)
 
     merge_list = [
-        [(11, 'SHISEIDO 資生堂',), (29, 'SHISEIDO 資生堂（國際櫃）',),],
+        [(11, 'SHISEIDO 資生堂',), (29, 'SHISEIDO 資生堂（國際櫃）',), (9013, 'SHISEIDO 資生堂（開架式）',),],
+        [(20, 'KOSE 高絲',), (9001, 'CLEAR TURN',),],
+        [(43, 'CLARINS 克蘭詩',), (9003, 'Clarins 克蘭詩',),],
         [(340, 'noreva 法國歐德瑪',), (907, '法國歐德瑪',),],
         [(370, 'Hada-Labo 肌研',), (841, 'HADALABO',),],
+        [(406, 'Dr.Morita 森田藥粧'), (9005, 'Dr.Morita',),],
         [(457, 'Pure Beauty',), (1189, 'PUREBEAUTY',),],
+        [(463, 'Za',), (9016, 'ZA',),],
         [(487, 'neuve 惹我',), (916, 'FITIT&WHITIA',),],
         [(511, 'Anime Cosme',), (1000, 'ANIMECOSME',),],
+        [(838, 'CHRONO AFFECTION 時間寵愛',), (9019, '時間寵愛',),],
         [(868, 'EQUILIBRA 義貝拉',), (940, 'PERLABELLA 義貝拉',), (943, 'SYRIO',),],
-        [(970, 'MEMEBOX',), (1402, 'PONY EFFECT',), (1606, 'PONY女王',),],
+        [(970, 'MEMEBOX',), (1402, 'PONY EFFECT',), (1606, 'PONY女王',), (9008, 'MEMEBOX',),],
         [(976, '西班牙Babaria',), (1030, 'babaria 西班牙babaria',),],
         [(925, 'A’PIEU',), (1009, 'A\'PIEU',),],
         [(1525, 'Natura Bissé',), (1597, 'Natura Bissé',),],

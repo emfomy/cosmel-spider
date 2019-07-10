@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import json
 from functools import partial
 
 import scrapy
@@ -21,7 +20,7 @@ class Spider(scrapy.Spider, CosmelSpider):
         db = Db(self)
         db.execute('''
             SELECT id, author, link FROM cosmel_styleme.article
-            WHERE is_styleme=False
+            WHERE is_styleme=False AND is_old=False
               AND (title IS NULL OR body IS NULL)
         ''')
         res = db.fetchall()
